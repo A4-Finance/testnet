@@ -52,6 +52,7 @@ cd ~/a4chain
 git fetch
 git checkout master
 go build -tags testnet -o a4chaind ./cmd/a4chaind
+mkdir -p $GOBIN
 cp a4chaind $GOBIN/a4chaind
 
 
