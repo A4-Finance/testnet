@@ -13,7 +13,7 @@ else
   apt install build-essential jq wget git -y
 
   wget https://dl.google.com/go/go1.19.linux-amd64.tar.gz
-  tar -xvf go1.19.linux-amd64
+  tar -xvf go1.19.linux-amd64.tar.gz
   mv go /usr/local
 
   echo "" >> ~/.bashrc
@@ -25,13 +25,17 @@ else
 fi
 
 source ~/.bashrc
+export GOPATH=$HOME/go
+export GOROOT=/usr/local/go
+export GOBIN=$GOPATH/bin
+export PATH=$PATH:/usr/local/go/bin:$GOBIN
 
 echo "CAUTION!"
-echo "-- If a4chain was previously installed, the following step will remove ~/.a4chain from your system. Are you sure you would like to continue?--"
+echo "-- If a4chain was previously installed, the following step will remove ~/.a4chaind from your system. Are you sure you would like to continue?--"
 
 select yn in "Yes" "No"; do
     case $yn in
-        Yes ) rm -rf ~/.a4chain; break;;
+        Yes ) rm -rf ~/.a4chaind; break;;
         No ) exit;;
     esac
 done
@@ -42,6 +46,7 @@ CHAIN_ID=afour_655-1
 PERSISTENT_PEERS="4392780bad9f40ac79c53be6683b8b960247b54c@65.108.234.172:26650,3c6f960316f3b6440a57d8b5bfd93a57645b6d9a@65.108.234.173:26650"
 
 echo "install a4chain"
+rm -rf ~/a4chain
 git clone https://gitlab.fin.so/contracts/a4/a4chain
 cd ~/a4chain
 git fetch
@@ -86,7 +91,8 @@ echo ""
 echo "----------Setting up your validator node------------"
 $DAEMON init --chain-id $CHAIN_ID $YOUR_NAME
 echo "------Downloading A4chain Testnet genesis--------"
-curl -s https://gitlab.fin.so/contracts/a4/testnet/-/raw/master/a4chain-1/genesis.json > ~/.a4chaind/config/genesis.json
+#curl -s https://gitlab.fin.so/contracts/a4/testnet/-/raw/master/a4chain-1/genesis.json > ~/.a4chaind/config/genesis.json
+cp ~/testnet/a4chain-1/genesis.json ~/.a4chaind/config/genesis.json
 
 echo "----------Setting config for seed node---------"
 sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#g' ~/.$DAEMON/config/config.toml
