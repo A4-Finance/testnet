@@ -43,7 +43,7 @@ done
 DAEMON=a4chaind
 DENOM=baseta4
 CHAIN_ID=afour_655-1
-PERSISTENT_PEERS="4392780bad9f40ac79c53be6683b8b960247b54c@65.108.234.172:26650,3c6f960316f3b6440a57d8b5bfd93a57645b6d9a@65.108.234.173:26650"
+PERSISTENT_PEERS="0b0cf754f6fed494edf51f01d57e784e2bbf2a17@65.108.234.173:26656,54346d2d3b0d61771748dfc33be39a87e710ba4a@65.108.234.172:26656"
 
 echo "install a4chain"
 rm -rf ~/a4chain
@@ -65,7 +65,7 @@ read YOUR_KEY_NAME
 echo "-- Please choose a moniker --"
 read YOUR_NAME
 
-echo "-- Your Key Name is $YOUR_KEY_NAME and your moniker is $YOUR_NAME. Is this correct?"
+echo "-- Your Key Name is ${YOUR_KEY_NAME} and your moniker is ${YOUR_NAME}. Is this correct?"
 
 select yn in "Yes" "No" "Cancel"; do
     case $yn in
@@ -78,10 +78,10 @@ select yn in "Yes" "No" "Cancel"; do
     esac
 done
 
-echo "-- Your Key Name is $YOUR_KEY_NAME and your moniker is $YOUR_NAME. --"
+echo "-- Your Key Name is ${YOUR_KEY_NAME} and your moniker is ${YOUR_NAME}. --"
 
 echo "Creating keys"
-$DAEMON keys add $YOUR_KEY_NAME
+$DAEMON keys add ${YOUR_KEY_NAME}
 
 echo ""
 echo "After you have copied the mnemonic phrase in a safe place,"
@@ -93,13 +93,13 @@ echo "----------Setting up your validator node------------"
 $DAEMON init --chain-id $CHAIN_ID $YOUR_NAME
 echo "------Downloading A4chain Testnet genesis--------"
 #curl -s https://gitlab.fin.so/contracts/a4/testnet/-/raw/master/a4chain-1/genesis.json > ~/.a4chaind/config/genesis.json
-cp ~/testnet/a4chain-1/genesis.json ~/.a4chaind/config/genesis.json
+cp ~/testnet/${CHAIN_ID}/genesis.json ~/.a4chaind/config/genesis.json
 
 echo "----------Setting config for seed node---------"
-sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#g' ~/.$DAEMON/config/config.toml
-sed -i '/persistent_peers =/c\persistent_peers = "'"$PERSISTENT_PEERS"'"' ~/.$DAEMON/config/config.toml
+sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#g' ~/.${DAEMON}/config/config.toml
+sed -i '/persistent_peers =/c\persistent_peers = "'"${PERSISTENT_PEERS}"'"' ~/.${DAEMON}/config/config.toml
 
-DAEMON_PATH=$(which $DAEMON)
+DAEMON_PATH=$(which ${DAEMON})
 
 echo "Installing cosmovisor - an upgrade manager..."
 
@@ -147,4 +147,4 @@ echo ""
 echo ""
 echo "Next you will need to fund the above wallet address. When finished, you can create your validator by customizing and running the following command"
 echo ""
-echo "a4chaind tx staking create-validator --amount 9000000000${DENOM} --commission-max-change-rate \"0.1\" --commission-max-rate \"0.20\" --commission-rate \"0.1\" --details \"Some details about yourvalidator\" --from <keyname> --pubkey=\"$(a4chaind tendermint show-validator)\" --moniker <your moniker> --min-self-delegation \"1\" --chain-id ${CHAIN_ID} --gas auto --fees 500${DENOM}"
+echo "a4chaind tx staking create-validator --amount 1000000${DENOM} --commission-max-change-rate \"0.1\" --commission-max-rate \"0.20\" --commission-rate \"0.1\" --details \"Some details about yourvalidator\" --from <keyname> --pubkey=\"$(a4chaind tendermint show-validator)\" --moniker <your moniker> --min-self-delegation \"1\" --chain-id ${CHAIN_ID} --gas auto --fees 500${DENOM}"
