@@ -32766,10 +32766,15 @@
     "evm": {
       "accounts": [],
       "params": {
-        "evm_denom": "aphoton",
+        "evm_denom": "baseta4",
         "enable_create": true,
         "enable_call": true,
-        "extra_eips": [],
+        "extra_eips": [
+          "2929",
+          "2200",
+          "1884",
+          "1344"
+	],
         "chain_config": {
           "homestead_block": "0",
           "dao_fork_block": "0",
@@ -32822,7 +32827,7 @@
         "max_deposit_period": "172800s"
       },
       "voting_params": {
-        "voting_period": "172800s"
+        "voting_period": "7200s"
       },
       "tally_params": {
         "quorum": "0.334000000000000000",
