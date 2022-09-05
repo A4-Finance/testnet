@@ -47,7 +47,7 @@ PERSISTENT_PEERS="0b0cf754f6fed494edf51f01d57e784e2bbf2a17@65.108.234.173:26656,
 
 echo "install a4chain"
 rm -rf ~/a4chain
-git clone https://gitlab.fin.so/contracts/a4/a4chain
+git clone https://github.com/A4-Finance/a4chain 
 cd ~/a4chain
 git fetch
 git checkout master
@@ -92,8 +92,7 @@ echo ""
 echo "----------Setting up your validator node------------"
 $DAEMON init --chain-id $CHAIN_ID $YOUR_NAME
 echo "------Downloading A4chain Testnet genesis--------"
-#curl -s https://gitlab.fin.so/contracts/a4/testnet/-/raw/master/a4chain-1/genesis.json > ~/.a4chaind/config/genesis.json
-cp ~/testnet/${CHAIN_ID}/genesis.json ~/.a4chaind/config/genesis.json
+curl -s https://raw.githubusercontent.com/A4-Finance/testnet/master/afour_655-1/genesis.json  > ~/.a4chaind/config/genesis.json
 
 echo "----------Setting config for seed node---------"
 sed -i 's#tcp://127.0.0.1:26657#tcp://0.0.0.0:26657#g' ~/.${DAEMON}/config/config.toml
