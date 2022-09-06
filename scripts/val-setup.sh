@@ -5,16 +5,24 @@ command_exists () {
     type "$1" &> /dev/null ;
 }
 
+function run_as_root() {
+  if [ $EUID -eq 0 ]; then
+    ($@)
+  else
+    (sudo $@)
+  fi
+}
+
 if command_exists go ; then
     echo "Golang is already installed"
 else
   echo "Install dependencies"
-  apt update
-  apt install build-essential jq wget git -y
+  run_as_root apt update
+  run_as_root apt install build-essential jq wget git -y
 
   wget https://dl.google.com/go/go1.19.linux-amd64.tar.gz
   tar -xvf go1.19.linux-amd64.tar.gz
-  mv go /usr/local
+  run_as_root mv go /usr/local
 
   echo "" >> ~/.bashrc
   echo 'export GOPATH=$HOME/go' >> ~/.bashrc
@@ -132,9 +140,9 @@ LimitNOFILE=4096
 WantedBy=multi-user.target
 " >cosmovisor.service
 
-mv cosmovisor.service /lib/systemd/system/cosmovisor.service
-systemctl daemon-reload
-systemctl start cosmovisor
+run_as_root mv cosmovisor.service /lib/systemd/system/cosmovisor.service
+run_as_root systemctl daemon-reload
+run_as_root systemctl start cosmovisor
 
 echo ""
 echo "--------------Congratulations---------------"
