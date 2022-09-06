@@ -136,12 +136,14 @@ mv cosmovisor.service /lib/systemd/system/cosmovisor.service
 systemctl daemon-reload
 systemctl start cosmovisor
 
-
 echo ""
 echo "--------------Congratulations---------------"
 echo ""
 echo "View your account address by typing your passphrase below." 
-$DAEMON keys show $YOUR_KEY_NAME -a
+chainAddr="$(${DAEMON} keys show ${YOUR_KEY_NAME} -a)"
+echo "Native address: ${chainAddr}"
+evmAddr="$(${DAEMON} debug addr ${chainAddr} | grep 'Address (hex)' | sed 's/Address (hex): /0x/')"
+echo "Evm address: ${evmAddr}"
 echo ""
 echo ""
 echo "Next you will need to fund the above wallet address. When finished, you can create your validator by customizing and running the following command"
